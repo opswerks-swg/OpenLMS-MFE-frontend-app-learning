@@ -116,3 +116,14 @@ export async function getCoursewareOutlineSidebarToggles(courseId) {
     enable_completion_tracking: data.enable_completion_tracking || false,
   };
 }
+export async function postTimeSpent(courseId, seconds) {
+  try {
+    const { data } = await getAuthenticatedHttpClient().patch(
+      `${getConfig().LMS_BASE_URL}/api/course_assignments/v1/time-spent/${courseId}/`,
+      { seconds_spent: seconds },
+    );
+    return data;
+  } catch (error) {
+    return null;
+  }
+}
