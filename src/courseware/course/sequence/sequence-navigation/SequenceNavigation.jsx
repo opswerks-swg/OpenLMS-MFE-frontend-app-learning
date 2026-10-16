@@ -78,6 +78,11 @@ const SequenceNavigation = ({
   const renderNextButton = () => {
     let buttonText;
     const { exitActive, exitText } = GetCourseExitNavigation(courseId, intl);
+    // Hide "Next" on the last unit of the course. Keep this after the hook call above
+    // so the hook order stays stable across renders.
+    if (isLastUnit) {
+      return null;
+    }
     const disabled = isLastUnit && !exitActive;
 
     if (isLastUnit && exitText) {
