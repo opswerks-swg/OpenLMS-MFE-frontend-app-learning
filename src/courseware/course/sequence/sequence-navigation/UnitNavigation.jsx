@@ -40,6 +40,11 @@ const UnitNavigation = ({
 
   const renderNextButton = () => {
     const { exitActive, exitText } = GetCourseExitNavigation(courseId, intl);
+    // Hide "Next" on the last unit of the course. Keep this after the hook call above
+    // so the hook order stays stable across renders.
+    if (isLastUnit) {
+      return null;
+    }
     const buttonText = (isLastUnit && exitText) ? exitText : intl.formatMessage(messages.nextButton);
     const disabled = isLastUnit && !exitActive;
     const variant = 'outline-primary';
