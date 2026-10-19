@@ -97,7 +97,7 @@ describe('Sequence Navigation', () => {
     expect(screen.getByRole('link', { name: /next/i })).toBeEnabled();
   });
 
-  it('has the "Next" button disabled for the last unit of the sequence if there is no Exit page', async () => {
+  it('hides the "Next" button for the last unit of the course if there is no Exit page', async () => {
     const testMetadata = { ...courseMetadata, certificate_data: { cert_status: 'bogus_status' }, user_has_passing_grade: true };
     const testStore = await initializeTestStore({ courseMetadata: testMetadata, unitBlocks }, false);
     // Have to refetch the sequenceId since the new store generates new sequences
@@ -110,10 +110,11 @@ describe('Sequence Navigation', () => {
     );
 
     expect(screen.getByRole('link', { name: /previous/i })).toBeEnabled();
-    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
+    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /next/i })).not.toBeInTheDocument();
   });
 
-  it('displays end of course message instead of the "Next" button as needed', async () => {
+  it('hides the end of course button on the last unit of the course', async () => {
     const testMetadata = { ...courseMetadata, certificate_data: { cert_status: 'notpassing' }, enrollment: { is_active: true } };
     const testStore = await initializeTestStore({ courseMetadata: testMetadata, unitBlocks }, false);
     // Have to refetch the sequenceId since the new store generates new sequences
@@ -126,10 +127,10 @@ describe('Sequence Navigation', () => {
     );
 
     expect(screen.getByRole('link', { name: /previous/i })).toBeEnabled();
-    expect(screen.getByRole('link', { name: /next \(end of course\)/i })).toBeEnabled();
+    expect(screen.queryByRole('link', { name: /next \(end of course\)/i })).not.toBeInTheDocument();
   });
 
-  it('displays complete course message instead of the "Next" button as needed', async () => {
+  it('hides the complete course button on the last unit of the course', async () => {
     const testMetadata = {
       ...courseMetadata,
       certificate_data: { cert_status: 'downloadable' },
@@ -147,7 +148,7 @@ describe('Sequence Navigation', () => {
     );
 
     expect(screen.getByRole('link', { name: /previous/i })).toBeEnabled();
-    expect(screen.getByRole('link', { name: /Complete the course/i })).toBeEnabled();
+    expect(screen.queryByRole('link', { name: /Complete the course/i })).not.toBeInTheDocument();
   });
 
   it('handles "Previous" and "Next" click', () => {

@@ -98,7 +98,7 @@ describe('Unit Navigation', () => {
     expect(screen.getByRole('link', { name: /next/i })).toBeEnabled();
   });
 
-  it('has the "Next" button disabled for the last unit in the sequence if there is no Exit Page', async () => {
+  it('hides the "Next" button for the last unit of the course if there is no Exit Page', async () => {
     const testCourseMetadata = { ...courseMetadata, certificate_data: { cert_status: 'bogus_status' }, user_has_passing_grade: true };
     const testStore = await initializeTestStore({ courseMetadata: testCourseMetadata, unitBlocks }, false);
     // Have to refetch the sequenceId since the new store generates new sequences
@@ -111,10 +111,11 @@ describe('Unit Navigation', () => {
     );
 
     expect(screen.getByRole('link', { name: /previous/i })).toBeEnabled();
-    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
+    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /next/i })).not.toBeInTheDocument();
   });
 
-  it('has the "Next" button disabled for entrance exam failed', async () => {
+  it('hides the "Next" button for entrance exam failed', async () => {
     const testCourseMetadata = {
       ...courseMetadata,
       certificate_data: { cert_status: 'bogus_status' },
@@ -133,7 +134,8 @@ describe('Unit Navigation', () => {
       { store: testStore, wrapWithRouter: true },
     );
 
-    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
+    expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /next/i })).not.toBeInTheDocument();
   });
 
   it('has the "Next" button enabled for entrance exam pass', async () => {
@@ -171,10 +173,10 @@ describe('Unit Navigation', () => {
     );
 
     expect(screen.getByRole('link', { name: /previous/i })).toBeEnabled();
-    expect(screen.getByRole('link', { name: /next \(end of course\)/i })).toBeEnabled();
+    expect(screen.queryByRole('link', { name: /next \(end of course\)/i })).not.toBeInTheDocument();
   });
 
-  it('displays complete course message instead of the "Next" button as needed', async () => {
+  it('hides the complete course button on the last unit of the course', async () => {
     const testCourseMetadata = {
       ...courseMetadata,
       certificate_data: { cert_status: 'downloadable' },
@@ -192,6 +194,6 @@ describe('Unit Navigation', () => {
     );
 
     expect(screen.getByRole('link', { name: /previous/i })).toBeEnabled();
-    expect(screen.getByRole('link', { name: /Complete the course/i })).toBeEnabled();
+    expect(screen.queryByRole('link', { name: /Complete the course/i })).not.toBeInTheDocument();
   });
 });
