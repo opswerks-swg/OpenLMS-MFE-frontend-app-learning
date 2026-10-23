@@ -16,6 +16,11 @@ const messages = defineMessages({
     defaultMessage: 'Insights',
     description: 'Button Insights',
   },
+  titleOraExport: {
+    id: 'instructor.toolbar.oraExport',
+    defaultMessage: 'Export ORA submissions',
+    description: 'Button linking to the instructor tools ORA submission export for this course',
+  },
 });
 
 export default messages;
