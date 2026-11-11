@@ -25,6 +25,15 @@ function getInsightsUrl(courseId) {
   return urlFull;
 }
 
+// WerksLearning instructor tools MFE (MFE_CONFIG INSTRUCTOR_TOOLS_BASE_URL, plugins/openlms_mfe.py).
+function getOraExportUrl(courseId) {
+  const urlBase = getConfig().INSTRUCTOR_TOOLS_BASE_URL;
+  if (!urlBase || !courseId) {
+    return undefined;
+  }
+  return `${urlBase}/course/${encodeURIComponent(courseId)}/ora-export`;
+}
+
 function getStudioUrl(courseId, unitId) {
   const urlBase = getConfig().STUDIO_BASE_URL;
   let urlFull;
@@ -63,6 +72,7 @@ const InstructorToolbar = (props) => {
 
   const urlInsights = getInsightsUrl(courseId);
   const urlStudio = getStudioUrl(courseId, unitId);
+  const urlOraExport = getOraExportUrl(courseId);
   const [masqueradeErrorMessage, showMasqueradeError] = useState(null);
   const { formatMessage } = useIntl();
   const accessExpirationMasqueradeBanner = useAccessExpirationMasqueradeBanner(courseId, tab);
@@ -89,6 +99,11 @@ const InstructorToolbar = (props) => {
           {urlInsights && (
             <span className="mx-1 my-1">
               <a className="btn btn-inverse-outline-primary" href={urlInsights}>{formatMessage(messages.titleInsights)}</a>
+            </span>
+          )}
+          {urlOraExport && (
+            <span className="mx-1 my-1">
+              <a className="btn btn-inverse-outline-primary" href={urlOraExport}>{formatMessage(messages.titleOraExport)}</a>
             </span>
           )}
         </div>
